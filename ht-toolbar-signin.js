@@ -1,8 +1,8 @@
 "use strict";
 import { LitElement, html } from "../@polymer/lit-element/lit-element.js";
-import "../@polymer/iron-iconset-svg/iron-iconset-svg.js";
 import "../@polymer/paper-icon-button/paper-icon-button.js";
 import "../@polymer/paper-button/paper-button.js";
+import "../@polymer/iron-dropdown/iron-dropdown.js";
 import "../@polymer/paper-styles/default-theme.js";
 
 class HTToolabarSignin extends LitElement {
@@ -14,7 +14,7 @@ class HTToolabarSignin extends LitElement {
             position: relative;
             box-sizing: border-box;
         }
-
+        
         #container {
           display:flex;
         }
@@ -26,6 +26,7 @@ class HTToolabarSignin extends LitElement {
             border-radius: 50%;
             overflow: hidden;
             padding:0;
+            margin-left:4px;
         }
 
         paper-button {
@@ -43,19 +44,19 @@ class HTToolabarSignin extends LitElement {
           transition: background-color .2s,color .2s;
         }
 
+        #dropdown {
+          box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+          0 1px 10px 0 rgba(0, 0, 0, 0.12),
+          0 2px 4px -1px rgba(0, 0, 0, 0.4);
+          width: 270px;
+          overflow: hidden;
+          background: #fff;
+        }
+
         [hidden] {
           display: none;
         }
       </style>
-      <iron-iconset-svg size="24" name="ht-toolbar-signin-icons">
-          <svg>
-              <defs>
-                <g id="account-circle">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"></path>
-                </g>
-              </defs>
-          </svg>
-      </iron-iconset-svg>
       <div id="container">
         <paper-button hidden?=${signedIn} on-click="${e => {
       e.preventDefault();
@@ -64,8 +65,14 @@ class HTToolabarSignin extends LitElement {
         
         <paper-icon-button src$=${photoURL} hidden?=${!signedIn} on-click="${e => {
       e.preventDefault();
-      this.signOut();
+      this.open();
     }}"></paper-icon-button>
+
+      <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" vertical-offset="36" on-click="close">
+        <div slot="dropdown-content">
+            <slot></slot>
+        </div>
+      </iron-dropdown>
       </div>
 `;
   }
@@ -89,12 +96,20 @@ class HTToolabarSignin extends LitElement {
     );
   }
 
-  signOut() {
-    this.dispatchEvent(
-      new CustomEvent("signout", {
-        bubbles: false
-      })
-    );
+  get dropdown() {
+    return this.shadowRoot.querySelector("#dropdown");
+  }
+
+  open() {
+    if (this.dropdown.style.display === "") {
+      this.dropdown.close();
+    } else {
+      this.dropdown.open();
+    }
+  }
+
+  close() {
+    this.dropdown.close();
   }
 }
 
