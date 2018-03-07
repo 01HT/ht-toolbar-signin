@@ -52,27 +52,25 @@ class HTToolabarSignin extends LitElement {
           overflow: hidden;
           background: #fff;
         }
-
-        [hidden] {
-          display: none;
-        }
       </style>
       <div id="container">
-        <paper-button hidden?=${signedIn} on-click="${e => {
-      e.preventDefault();
-      this.signIn();
-    }}">Войти</paper-button>
-        
-        <paper-icon-button src$=${photoURL} hidden?=${!signedIn} on-click="${e => {
-      e.preventDefault();
-      this.open();
-    }}"></paper-icon-button>
+        ${
+          signedIn
+            ? html`<paper-icon-button src$=${photoURL} on-click="${e => {
+                e.preventDefault();
+                this.open();
+              }}"></paper-icon-button>`
+            : html`<paper-button on-click="${e => {
+                e.preventDefault();
+                this.signIn();
+              }}">Войти</paper-button>`
+        }
 
-      <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" vertical-offset="36" on-click="close">
-        <div slot="dropdown-content">
-            <slot></slot>
-        </div>
-      </iron-dropdown>
+        <iron-dropdown id="dropdown" horizontal-align="right" vertical-align="top" vertical-offset="36" on-click="close">
+          <div slot="dropdown-content">
+              <slot></slot>
+          </div>
+        </iron-dropdown>
       </div>
 `;
   }
