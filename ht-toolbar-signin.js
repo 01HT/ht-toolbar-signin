@@ -1,9 +1,9 @@
 "use strict";
-import { LitElement, html } from "../@polymer/lit-element/lit-element.js";
-import "../@polymer/paper-icon-button/paper-icon-button.js";
-import "../@polymer/paper-button/paper-button.js";
-import "../@polymer/iron-dropdown/iron-dropdown.js";
-import "../@polymer/paper-styles/default-theme.js";
+import { LitElement, html } from "@polymer/lit-element";
+import "@polymer/paper-icon-buttons";
+import "@polymer/paper-button";
+import "@polymer/iron-dropdown";
+import "@polymer/paper-styles/default-theme.js";
 
 class HTToolabarSignin extends LitElement {
   render({ signedIn, photoURL }) {
