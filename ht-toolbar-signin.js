@@ -1,6 +1,6 @@
 "use strict";
 import { LitElement, html } from "@polymer/lit-element";
-import "@polymer/paper-icon-buttons";
+import "@polymer/paper-icon-button";
 import "@polymer/paper-button";
 import "@polymer/iron-dropdown";
 import "@polymer/paper-styles/default-theme.js";
