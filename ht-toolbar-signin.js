@@ -6,7 +6,7 @@ import "@polymer/iron-dropdown";
 import "@polymer/paper-styles/default-theme.js";
 
 class HTToolabarSignin extends LitElement {
-  render({ signedIn, photoURL }) {
+  _render({ signedIn, photoURL }) {
     return html`
       <style>
         :host {
