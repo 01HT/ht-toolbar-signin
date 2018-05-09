@@ -6,13 +6,10 @@
   "author": "maksimyurkov <yurkov.maksim.sergeevich@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@polymer/lit-element": "@next",
-    "@polymer/paper-icon-button": "@next",
-    "@polymer/paper-styles": "@next",
-    "@polymer/paper-button": "@next",
-    "@polymer/iron-dropdown": "@next"
-  },
-  "resolutions": {
-    "@polymer/paper-styles": "@next"
+    "@polymer/lit-element": "^0.5.1",
+    "@polymer/paper-icon-button": "^3.0.0-pre.18",
+    "@polymer/paper-styles": "^3.0.0-pre.18",
+    "@polymer/paper-button": "^3.0.0-pre.18",
+    "@polymer/iron-dropdown": "^3.0.0-pre.18"
   }
 }
