@@ -6,6 +6,7 @@ import "@polymer/iron-dropdown";
 import "@polymer/paper-spinner/paper-spinner.js";
 import "@polymer/paper-styles/default-theme.js";
 import { firebaseStyles } from "./firebase-styles.js";
+import { HTFirebaseStyles } from "./ht-firebase-styles.js";
 
 import { connect } from "pwa-helpers/connect-mixin.js";
 import { store } from "/src/store.js";
@@ -16,6 +17,7 @@ class HTToolabarSignin extends connect(store)(LitElement) {
   _render({ authInitialized, signedIn, photoURL, loadingUserData }) {
     return html`
     ${firebaseStyles}
+    ${HTFirebaseStyles}
       <style>
         :host {
           display: block;
@@ -63,22 +65,29 @@ class HTToolabarSignin extends connect(store)(LitElement) {
         }
 
         iron-dropdown {
-          box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-          0 1px 10px 0 rgba(0, 0, 0, 0.12),
-          0 2px 4px -1px rgba(0, 0, 0, 0.4);
-          width: 270px;
+          width:280px;
           height:auto;
           overflow: hidden;
           background: #fff;
+          box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+          0 1px 10px 0 rgba(0, 0, 0, 0.12),
+          0 2px 4px -1px rgba(0, 0, 0, 0.4);
+        }
+
+        iron-dropdown > div {
+          overflow: hidden;
+        }
+
+        #menuDropdown {
+          width:270px;
+        }
+
+        #loginDropdown {
+          min-height:308px;
         }
 
         [hidden], #buttons[hidden] {
           display:none;
-        }
-
-        #firebaseui-auth-container {
-          overflow: visible;
-          box-shadow: none;
         }
       </style>
       <div id="container">
@@ -90,10 +99,10 @@ class HTToolabarSignin extends connect(store)(LitElement) {
         }>
           ${
             signedIn
-              ? html`<paper-icon-button src$=${photoURL} on-click=${e => {
+              ? html`<paper-icon-button src$=${photoURL} on-click=${_ => {
                   this._toggleDropdown("menuDropdown");
                 }}></paper-icon-button>`
-              : html`<paper-button on-click=${e => {
+              : html`<paper-button on-click=${_ => {
                   this._toggleDropdown("loginDropdown");
                 }}>Войти</paper-button>`
           }
@@ -105,14 +114,13 @@ class HTToolabarSignin extends connect(store)(LitElement) {
               </div>
           </div>
         </iron-dropdown>
-        <iron-dropdown id="loginDropdown" horizontal-align="right" vertical-align="top" vertical-offset="36">
+        <iron-dropdown id="loginDropdown" horizontal-align="right" vertical-align="top" vertical-offset="36" on-iron-overlay-opened=${_ => {
+          this._startPeriodicRefit();
+        }} on-iron-overlay-closed=${_ => {
+      this._stopPeriodicRefit();
+    }}>
           <div slot="dropdown-content">
-              <div id="firebaseui-auth-container" on-click=${_ => {
-                setTimeout(_ => {
-                  console.log("ok");
-                  this._refit();
-                }, 1000);
-              }}></div>
+              <div id="firebaseui-auth-container"></div>
           </div>
         </iron-dropdown>
       </div>
@@ -128,7 +136,8 @@ class HTToolabarSignin extends connect(store)(LitElement) {
       authInitialized: Boolean,
       signedIn: Boolean,
       photoURL: String,
-      loadingUserData: Boolean
+      loadingUserData: Boolean,
+      refitIntervalId: Number
     };
   }
 
@@ -152,8 +161,7 @@ class HTToolabarSignin extends connect(store)(LitElement) {
 
   _loadFirebaseUIScript() {
     const script = document.createElement("script");
-    script.src = "https://fir-ui-demo-84a6c.firebaseapp.com/dist/firebaseui.js";
-    // script.src = "/node_modules/ht-toolbar-signin/firebase-ui-auth__ru.js";
+    script.src = "/node_modules/ht-toolbar-signin/firebase-ui-auth__ru.js";
     script.onload = _ => {
       this._firebaseUILoaded();
     };
@@ -165,30 +173,22 @@ class HTToolabarSignin extends connect(store)(LitElement) {
       callbacks: {
         // Called when the user has been successfully signed in.
         signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-          // if (authResult.user) {
-          //   handleSignedInUser(authResult.user);
-          // }
-          // if (authResult.additionalUserInfo) {
-          //   document.getElementById('is-new-user').textContent =
-          //     authResult.additionalUserInfo.isNewUser ?
-          //       'New User' : 'Existing User';
-          // }
           // Do not redirect.
           return false;
         }
       },
-      // Opens IDP Providers sign-in flow in a popup.
       signInFlow: "popup",
       signInOptions: [
-        // TODO(developer): Remove the providers you don't need for your app.
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+        firebase.auth.GithubAuthProvider.PROVIDER_ID,
         {
           provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-          // Whether the display name should be displayed in Sign Up page.
-          requireDisplayName: true
+          requireDisplayName: false
         }
       ],
-      // Terms of service url.
+      credentialHelper: firebaseui.auth.CredentialHelper.NONE,
       tosUrl: "/privacy"
     };
   }
@@ -196,14 +196,14 @@ class HTToolabarSignin extends connect(store)(LitElement) {
   _firebaseUILoaded() {
     firebase.auth().onAuthStateChanged(
       async function(user) {
+        // alert("stateChanged");
         this.close();
         if (!this.authInitialized) store.dispatch(authInitialized());
         if (user) {
-          console.log(user);
           // User is signed in.
-          console.log("User is signed in");
-          if (user.emailVerified === false) user.sendEmailVerification();
-
+          // console.log("User is signed in");
+          // if (user.emailVerified === false) user.sendEmailVerification();
+          this._closeLoginDropdown();
           this.loadingUserData = true;
           let uid = user.uid;
           let userData = await this.getUserData(uid);
@@ -211,7 +211,7 @@ class HTToolabarSignin extends connect(store)(LitElement) {
           this.loadingUserData = false;
         } else {
           // No user is signed in.
-          console.log("No user is signed in");
+          // console.log("No user is signed in");
           if (this.signedIn) {
             this._initFirebaseAuthContainer();
             store.dispatch(signOut());
@@ -234,7 +234,6 @@ class HTToolabarSignin extends connect(store)(LitElement) {
   }
 
   _refit() {
-    // console.log("refit");
     this.loginDropdown.refit();
   }
 
@@ -246,12 +245,28 @@ class HTToolabarSignin extends connect(store)(LitElement) {
     }
   }
 
+  _closeLoginDropdown() {
+    this.loginDropdown.close();
+  }
+
+  _startPeriodicRefit() {
+    this.refitIntervalId = setInterval(_ => {
+      this._refit();
+    }, 300);
+  }
+
+  _stopPeriodicRefit() {
+    clearInterval(this.refitIntervalId);
+  }
+
   close() {
     this["menuDropdown"].close();
   }
 
-  async getUserData(uid) {
+  async getUserData(uid, counterParam) {
     try {
+      let counter = 0;
+      if (counterParam) counter = counterParam;
       let doc = await firebase
         .firestore()
         .collection("users")
@@ -260,12 +275,15 @@ class HTToolabarSignin extends connect(store)(LitElement) {
       if (doc.exists) {
         return doc.data();
       } else {
-        // First signin
-        return new Promise(
+        let promise = new Promise(resolve => {
+          if (counter === 10)
+            throw new Error("GetUserData invoke limit was reached");
           setTimeout(_ => {
-            getUserData(uid);
-          }, 1000)
-        );
+            resolve(this.getUserData(uid, counter++));
+          }, 1000);
+        });
+        await promise;
+        return promise;
       }
     } catch (e) {
       console.log("getUserData: " + e.message);
