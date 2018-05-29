@@ -1,15 +1,50 @@
 {
-  "name": "ht-toolbar-signin",
-  "version": "1.0.0",
-  "main": "ht-toolbar-signin.js",
-  "repository": "https://github.com/maksimyurkov/ht-toolbar-signin",
-  "author": "maksimyurkov <yurkov.maksim.sergeevich@gmail.com>",
-  "license": "MIT",
+  "_from": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
+  "_id": "ht-toolbar-signin@1.0.0",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/ht-toolbar-signin",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "ht-toolbar-signin@git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
+    "name": "ht-toolbar-signin",
+    "escapedName": "ht-toolbar-signin",
+    "rawSpec": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
+    "saveSpec": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
+    "fetchSpec": "https://github.com/maksimyurkov/ht-toolbar-signin.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git#67861ac8b4633abf2cc9b62bcb756fa9ff041d58",
+  "_spec": "ht-toolbar-signin@git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
+  "_where": "C:\\Users\\max\\Desktop\\elements-01-ht",
+  "author": {
+    "name": "maksimyurkov",
+    "email": "yurkov.maksim.sergeevich@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/maksimyurkov/ht-toolbar-signin/issues"
+  },
+  "bundleDependencies": false,
   "dependencies": {
+    "@polymer/iron-dropdown": "^3.0.0-pre.18",
     "@polymer/lit-element": "^0.5.1",
-    "@polymer/paper-icon-button": "^3.0.0-pre.18",
-    "@polymer/paper-styles": "^3.0.0-pre.18",
     "@polymer/paper-button": "^3.0.0-pre.18",
-    "@polymer/iron-dropdown": "^3.0.0-pre.18"
-  }
+    "@polymer/paper-icon-button": "^3.0.0-pre.18",
+    "@polymer/paper-styles": "^3.0.0-pre.18"
+  },
+  "deprecated": false,
+  "description": "",
+  "homepage": "https://github.com/maksimyurkov/ht-toolbar-signin#readme",
+  "license": "MIT",
+  "main": "ht-toolbar-signin.js",
+  "name": "ht-toolbar-signin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git"
+  },
+  "version": "1.0.0"
 }

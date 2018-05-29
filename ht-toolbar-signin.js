@@ -14,7 +14,7 @@ import { store } from "/src/store.js";
 import { authInitialized, signIn, signOut } from "/src/actions/auth.js";
 
 class HTToolabarSignin extends connect(store)(LitElement) {
-  _render({ authInitialized, signedIn, photoURL, loadingUserData }) {
+  _render({ authInitialized, signedIn, userId, loadingUserData }) {
     return html`
     ${firebaseStyles}
     ${HTFirebaseStyles}
@@ -99,7 +99,7 @@ class HTToolabarSignin extends connect(store)(LitElement) {
         }>
           ${
             signedIn
-              ? html`<paper-icon-button src$=${photoURL} on-click=${_ => {
+              ? html`<paper-icon-button src$="https://storage.googleapis.com/api-01-ht.appspot.com/users/${userId}/avatar-64w.jpg" on-click=${_ => {
                   this._toggleDropdown("menuDropdown");
                 }}></paper-icon-button>`
               : html`<paper-button on-click=${_ => {
@@ -135,7 +135,7 @@ class HTToolabarSignin extends connect(store)(LitElement) {
     return {
       authInitialized: Boolean,
       signedIn: Boolean,
-      photoURL: String,
+      userId: String,
       loadingUserData: Boolean,
       refitIntervalId: Number
     };
@@ -144,7 +144,7 @@ class HTToolabarSignin extends connect(store)(LitElement) {
   _stateChanged(state) {
     this.authInitialized = state.auth.authInitialized;
     this.signedIn = state.auth.signedIn;
-    this.photoURL = state.auth.user.photoURL;
+    this.userId = state.auth.user.uid;
   }
 
   _firstRendered() {
@@ -196,12 +196,10 @@ class HTToolabarSignin extends connect(store)(LitElement) {
   _firebaseUILoaded() {
     firebase.auth().onAuthStateChanged(
       async function(user) {
-        // alert("stateChanged");
         this.close();
         if (!this.authInitialized) store.dispatch(authInitialized());
         if (user) {
           // User is signed in.
-          // console.log("User is signed in");
           // if (user.emailVerified === false) user.sendEmailVerification();
           this._closeLoginDropdown();
           this.loadingUserData = true;
@@ -211,7 +209,6 @@ class HTToolabarSignin extends connect(store)(LitElement) {
           this.loadingUserData = false;
         } else {
           // No user is signed in.
-          // console.log("No user is signed in");
           if (this.signedIn) {
             this._initFirebaseAuthContainer();
             store.dispatch(signOut());
