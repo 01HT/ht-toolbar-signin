@@ -214,6 +214,13 @@ class HTToolabarSignin extends connect(store)(LitElement) {
             store.dispatch(signOut());
           }
         }
+        // on-auth-state-changed
+        this.dispatchEvent(
+          new CustomEvent("on-auth-state-changed", {
+            bubbles: true,
+            composed: true
+          })
+        );
       }.bind(this)
     );
     // Initialize the FirebaseUI Widget using Firebase.
