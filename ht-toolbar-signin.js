@@ -294,6 +294,10 @@ class HTToolabarSignin extends connect(store)(LitElement) {
     }
   }
 
+  openLogin() {
+    this._toggleDropdown("loginDropdown");
+  }
+
   // signIn() {
   // this.dispatchEvent(
   //   new CustomEvent("signin", {
