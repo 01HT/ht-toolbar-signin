@@ -18,9 +18,9 @@
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git#67861ac8b4633abf2cc9b62bcb756fa9ff041d58",
+  "_resolved": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git#513df2c70690f40f08eecab03fbdbe86eeb83d12",
   "_spec": "ht-toolbar-signin@git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
-  "_where": "C:\\Users\\max\\Desktop\\elements-01-ht",
+  "_where": "c:\\Users\\max\\Desktop\\elements-01-ht",
   "author": {
     "name": "maksimyurkov",
     "email": "yurkov.maksim.sergeevich@gmail.com"

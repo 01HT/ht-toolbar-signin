@@ -9,9 +9,9 @@ import { firebaseStyles } from "./firebase-styles.js";
 import { HTFirebaseStyles } from "./ht-firebase-styles.js";
 
 import { connect } from "pwa-helpers/connect-mixin.js";
-import { store } from "/src/store.js";
+import { store } from "../../src/store.js";
 
-import { authInitialized, signIn, signOut } from "/src/actions/auth.js";
+import { authInitialized, signIn, signOut } from "../../src/actions/auth.js";
 
 class HTToolabarSignin extends connect(store)(LitElement) {
   _render({ authInitialized, signedIn, userId, loadingUserData }) {
