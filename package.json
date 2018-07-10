@@ -1,50 +1,15 @@
 {
-  "_from": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
-  "_id": "ht-toolbar-signin@1.0.0",
-  "_inBundle": false,
-  "_integrity": "",
-  "_location": "/ht-toolbar-signin",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "git",
-    "raw": "ht-toolbar-signin@git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
-    "name": "ht-toolbar-signin",
-    "escapedName": "ht-toolbar-signin",
-    "rawSpec": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
-    "saveSpec": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
-    "fetchSpec": "https://github.com/maksimyurkov/ht-toolbar-signin.git",
-    "gitCommittish": null
-  },
-  "_requiredBy": [
-    "/"
-  ],
-  "_resolved": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git#513df2c70690f40f08eecab03fbdbe86eeb83d12",
-  "_spec": "ht-toolbar-signin@git+https://github.com/maksimyurkov/ht-toolbar-signin.git",
-  "_where": "c:\\Users\\max\\Desktop\\elements-01-ht",
-  "author": {
-    "name": "maksimyurkov",
-    "email": "yurkov.maksim.sergeevich@gmail.com"
-  },
-  "bugs": {
-    "url": "https://github.com/maksimyurkov/ht-toolbar-signin/issues"
-  },
-  "bundleDependencies": false,
+  "name": "@01ht/ht-toolbar-signin",
+  "version": "1.0.2",
+  "main": "ht-toolbar-signin.js",
+  "repository": "01ht/ht-toolbar-signin",
+  "author": "01ht Ltd",
+  "license": "UNLICENSED",
   "dependencies": {
     "@polymer/iron-dropdown": "^3.0.0-pre.18",
     "@polymer/lit-element": "^0.5.1",
     "@polymer/paper-button": "^3.0.0-pre.18",
     "@polymer/paper-icon-button": "^3.0.0-pre.18",
     "@polymer/paper-styles": "^3.0.0-pre.18"
-  },
-  "deprecated": false,
-  "description": "",
-  "homepage": "https://github.com/maksimyurkov/ht-toolbar-signin#readme",
-  "license": "MIT",
-  "main": "ht-toolbar-signin.js",
-  "name": "ht-toolbar-signin",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/maksimyurkov/ht-toolbar-signin.git"
-  },
-  "version": "1.0.0"
+  }
 }
