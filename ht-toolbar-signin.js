@@ -11,7 +11,12 @@ import { HTFirebaseStyles } from "./ht-firebase-styles.js";
 import { connect } from "pwa-helpers/connect-mixin.js";
 import { store } from "/src/store.js";
 
-import { authInitialized, signIn, signOut } from "/src/actions/auth.js";
+import {
+  authInitialized,
+  signIn,
+  signOut,
+  updateUserDataLoadingState
+} from "/src/actions/auth.js";
 
 class HTToolabarSignin extends connect(store)(LitElement) {
   _render({ authInitialized, signedIn, userId, loadingUserData }) {
@@ -92,20 +97,20 @@ class HTToolabarSignin extends connect(store)(LitElement) {
       </style>
       <div id="container">
         <paper-spinner active hidden?=${
-      !authInitialized || loadingUserData ? false : true
-      }></paper-spinner>
+          !authInitialized || loadingUserData ? false : true
+        }></paper-spinner>
         <div id="buttons" hidden?=${
-      !authInitialized || loadingUserData ? true : false
-      }>
+          !authInitialized || loadingUserData ? true : false
+        }>
           ${
-      signedIn
-        ? html`<paper-icon-button src$="https://storage.googleapis.com/api-01-ht.appspot.com/users/${userId}/avatar-64w.jpg" on-click=${_ => {
-          this._toggleDropdown("menuDropdown");
-        }}></paper-icon-button>`
-        : html`<paper-button on-click=${_ => {
-          this._toggleDropdown("loginDropdown");
-        }}>Войти</paper-button>`
-      }
+            signedIn
+              ? html`<paper-icon-button src$="https://storage.googleapis.com/api-01-ht.appspot.com/users/${userId}/avatar-64w.jpg" on-click=${_ => {
+                  this._toggleDropdown("menuDropdown");
+                }}></paper-icon-button>`
+              : html`<paper-button on-click=${_ => {
+                  this._toggleDropdown("loginDropdown");
+                }}>Войти</paper-button>`
+          }
         </div>
         <iron-dropdown id="menuDropdown" horizontal-align="right" vertical-align="top" vertical-offset="36">
           <div slot="dropdown-content">
@@ -115,10 +120,10 @@ class HTToolabarSignin extends connect(store)(LitElement) {
           </div>
         </iron-dropdown>
         <iron-dropdown id="loginDropdown" horizontal-align="right" vertical-align="top" vertical-offset="36" on-iron-overlay-opened=${_ => {
-        this._startPeriodicRefit();
-      }} on-iron-overlay-closed=${_ => {
-        this._stopPeriodicRefit();
-      }}>
+          this._startPeriodicRefit();
+        }} on-iron-overlay-closed=${_ => {
+      this._stopPeriodicRefit();
+    }}>
           <div slot="dropdown-content">
               <div id="firebaseui-auth-container"></div>
           </div>
@@ -145,6 +150,7 @@ class HTToolabarSignin extends connect(store)(LitElement) {
     this.authInitialized = state.auth.authInitialized;
     this.signedIn = state.auth.signedIn;
     this.userId = state.auth.user.uid;
+    this.loadingUserData = state.auth.loadingUserData;
   }
 
   _firstRendered() {
@@ -173,7 +179,7 @@ class HTToolabarSignin extends connect(store)(LitElement) {
     return {
       callbacks: {
         // Called when the user has been successfully signed in.
-        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
           // Do not redirect.
           return false;
         }
@@ -196,18 +202,18 @@ class HTToolabarSignin extends connect(store)(LitElement) {
 
   _firebaseUILoaded() {
     firebase.auth().onAuthStateChanged(
-      async function (user) {
+      async function(user) {
         this.close();
         if (!this.authInitialized) store.dispatch(authInitialized());
         if (user) {
           // User is signed in.
           // if (user.emailVerified === false) user.sendEmailVerification();
           this._closeLoginDropdown();
-          this.loadingUserData = true;
+          store.dispatch(updateUserDataLoadingState(true));
           let uid = user.uid;
           let userData = await this.getUserData(uid);
           store.dispatch(signIn(userData));
-          this.loadingUserData = false;
+          store.dispatch(updateUserDataLoadingState(false));
         } else {
           // No user is signed in.
           if (this.signedIn) {
