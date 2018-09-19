@@ -11,15 +11,10 @@ import { HTFirebaseStyles } from "./ht-firebase-styles.js";
 import { connect } from "pwa-helpers/connect-mixin.js";
 import { store } from "/src/store.js";
 
-import {
-  authInitialized,
-  signIn,
-  signOut,
-  updateUserDataLoadingState
-} from "/src/actions/auth.js";
+import { authInitialized, signIn, signOut } from "/src/actions/auth.js";
 
 class HTToolabarSignin extends connect(store)(LitElement) {
-  _render({ authInitialized, signedIn, userId, loadingUserData }) {
+  render() {
     return html`
     ${firebaseStyles}
     ${HTFirebaseStyles}
@@ -96,32 +91,34 @@ class HTToolabarSignin extends connect(store)(LitElement) {
         }
       </style>
       <div id="container">
-        <paper-spinner active hidden?=${
-          !authInitialized || loadingUserData ? false : true
-        }></paper-spinner>
-        <div id="buttons" hidden?=${
-          !authInitialized || loadingUserData ? true : false
-        }>
+        <paper-spinner active ?hidden=${!this.authInitialized ||
+          !this.loadingUserData}></paper-spinner>
+        <div id="buttons" ?hidden=${!this.authInitialized ||
+          this.loadingUserData}>
           ${
-            signedIn
-              ? html`<paper-icon-button src$="https://storage.googleapis.com/api-01-ht.appspot.com/users/${userId}/avatar-64w.jpg" on-click=${_ => {
+            this.signedIn
+              ? html`<paper-icon-button src=${
+                  window.cloudinaryURL
+                }/c_scale,r_max,f_auto,h_64,w_64/v${this.avatar.version}/${
+                  this.avatar.public_id
+                }.${this.avatar.format} @click=${_ => {
                   this._toggleDropdown("menuDropdown");
                 }}></paper-icon-button>`
-              : html`<paper-button on-click=${_ => {
+              : html`<paper-button @click=${_ => {
                   this._toggleDropdown("loginDropdown");
                 }}>Войти</paper-button>`
           }
         </div>
         <iron-dropdown id="menuDropdown" horizontal-align="right" vertical-align="top" vertical-offset="36">
           <div slot="dropdown-content">
-              <div hidden?=${signedIn ? false : true}>
+              <div ?hidden=${!this.signedIn}>
                 <slot></slot>
               </div>
           </div>
         </iron-dropdown>
-        <iron-dropdown id="loginDropdown" horizontal-align="right" vertical-align="top" vertical-offset="36" on-iron-overlay-opened=${_ => {
+        <iron-dropdown id="loginDropdown" horizontal-align="right" vertical-align="top" vertical-offset="36" @iron-overlay-opened=${_ => {
           this._startPeriodicRefit();
-        }} on-iron-overlay-closed=${_ => {
+        }} @iron-overlay-closed=${_ => {
       this._stopPeriodicRefit();
     }}>
           <div slot="dropdown-content">
@@ -140,20 +137,19 @@ class HTToolabarSignin extends connect(store)(LitElement) {
     return {
       authInitialized: Boolean,
       signedIn: Boolean,
-      userId: String,
       loadingUserData: Boolean,
-      refitIntervalId: Number
+      refitIntervalId: Number,
+      avatar: Object
     };
   }
 
   _stateChanged(state) {
     this.authInitialized = state.auth.authInitialized;
     this.signedIn = state.auth.signedIn;
-    this.userId = state.auth.user.uid;
-    this.loadingUserData = state.auth.loadingUserData;
+    this.avatar = state.auth.user.avatar;
   }
 
-  _firstRendered() {
+  firstUpdated() {
     this._loadFirebaseUIScript();
   }
 
@@ -209,11 +205,11 @@ class HTToolabarSignin extends connect(store)(LitElement) {
           // User is signed in.
           // if (user.emailVerified === false) user.sendEmailVerification();
           this._closeLoginDropdown();
-          store.dispatch(updateUserDataLoadingState(true));
+          this.loadingUserData = true;
           let uid = user.uid;
           let userData = await this.getUserData(uid);
           store.dispatch(signIn(userData));
-          store.dispatch(updateUserDataLoadingState(false));
+          this.loadingUserData = false;
         } else {
           // No user is signed in.
           if (this.signedIn) {
@@ -304,14 +300,6 @@ class HTToolabarSignin extends connect(store)(LitElement) {
   openLogin() {
     this._toggleDropdown("loginDropdown");
   }
-
-  // signIn() {
-  // this.dispatchEvent(
-  //   new CustomEvent("signin", {
-  //     bubbles: false
-  //   })
-  // );
-  // }
 }
 
 customElements.define(HTToolabarSignin.is, HTToolabarSignin);

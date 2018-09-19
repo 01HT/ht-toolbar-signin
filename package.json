@@ -1,15 +1,16 @@
 {
   "name": "@01ht/ht-toolbar-signin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "ht-toolbar-signin.js",
   "repository": "01ht/ht-toolbar-signin",
-  "author": "01ht Ltd",
+  "author": "01HT Ltd",
   "license": "UNLICENSED",
   "dependencies": {
-    "@polymer/iron-dropdown": "^3.0.0-pre.18",
-    "@polymer/lit-element": "^0.5.1",
-    "@polymer/paper-button": "^3.0.0-pre.18",
-    "@polymer/paper-icon-button": "^3.0.0-pre.18",
-    "@polymer/paper-styles": "^3.0.0-pre.18"
+    "@polymer/lit-element": "^0.6.1",
+    "@polymer/iron-dropdown": "^3.0.1",
+    "@polymer/paper-button": "^3.0.1",
+    "@polymer/paper-spinner": "^3.0.1",
+    "@polymer/paper-icon-button": "^3.0.1",
+    "@polymer/paper-styles": "^3.0.1"
   }
 }
