@@ -3,8 +3,7 @@
   "version": "1.0.4",
   "main": "ht-toolbar-signin.js",
   "repository": "01ht/ht-toolbar-signin",
-  "author": "01HT Ltd",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {
     "@polymer/lit-element": "^0.6.1",
     "@polymer/iron-dropdown": "^3.0.1",
