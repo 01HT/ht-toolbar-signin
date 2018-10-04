@@ -161,7 +161,176 @@ class HTToolabarSignin extends connect(store)(LitElement) {
     return this.shadowRoot.querySelector("#loginDropdown");
   }
 
-  _loadFirebaseUIScript() {
+  _getUiConfig() {
+    return {
+      callbacks: {
+        // Called when the user has been successfully signed in.
+        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+          // Do not redirect.
+          return false;
+        }
+      },
+      signInFlow: "popup",
+      signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+        firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+        firebase.auth.GithubAuthProvider.PROVIDER_ID,
+        {
+          provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+          requireDisplayName: false
+        }
+      ],
+      credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+      tosUrl: "https://01.ht/terms",
+      privacyPolicyUrl: "https://01.ht/privacy"
+    };
+  }
+
+  _firebaseUILoaded() {
+    try {
+    firebase.auth().onAuthStateChanged(
+      async function(user) {
+        this.close();
+        if (!this.authInitialized) store.dispatch(authInitialized());
+        if (user) {
+          // User is signed in
+          // Email not verified
+          if (user.emailVerified === false)  {
+            user.sendEmailVerification();
+            this.dispatchEvent(new CustomEvent("show-toast", {
+              bubbles: true,
+              composed: true,
+              detail: {
+                duration: 15000,
+                text: "Нажмите на ссылку подтверждения, которую мы отправили на ваш email"
+              }
+            }));
+            this._resetWidget();
+            return;
+          }
+          this._closeLoginDropdown();
+          this.loadingUserData = true;
+          let uid = user.uid;
+          let userData = await this.getUserData(uid);
+          if(userData === "user creating limit was reached") {
+            this._resetWidget();
+            return;
+          };
+          // If emailVerified but not updated in firestore
+          if (user.emailVerified && !userData.emailVerified) await this._updateEmailVerifiedInFirestore(uid);
+          store.dispatch(signIn(userData));
+          this.loadingUserData = false;
+        } else {
+          // No user is signed in.
+          if (this.signedIn) {
+            this._initFirebaseAuthContainer();
+            store.dispatch(signOut());
+          }
+        }
+        // on-auth-state-changed
+        this.dispatchEvent(
+          new CustomEvent("on-auth-state-changed", {
+            bubbles: true,
+            composed: true
+          })
+        );
+      }.bind(this)
+    );
+    // Initialize the FirebaseUI Widget using Firebase.
+    let ui = new firebaseui.auth.AuthUI(firebase.auth());
+    this._initFirebaseAuthContainer();
+    } catch(err) {
+      console.log(err);
+    }
+  }
+  
+  async _updateEmailVerifiedInFirestore(uid) {
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .update({ emailVerified: true});
+  }
+
+  _resetWidget() {
+    this._initFirebaseAuthContainer();
+    firebase.auth().signOut()
+    store.dispatch(signOut());
+    this.loadingUserData = false;
+    this.close();
+    this._closeLoginDropdown();
+  }
+
+  _initFirebaseAuthContainer() {
+    const ui = firebaseui.auth.AuthUI.getInstance();
+    ui.reset();
+    ui.start(
+      this.shadowRoot.querySelector("#firebaseui-auth-container"),
+      this._getUiConfig()
+    );
+  }
+
+  _refit() {
+    this.loginDropdown.refit();
+  }
+
+  _toggleDropdown(dropdownId) {
+    if (this[dropdownId].style.display === "") {
+      this[dropdownId].close();
+    } else {
+      this[dropdownId].open();
+    }
+  }
+
+  _closeLoginDropdown() {
+    this.loginDropdown.close();
+  }
+
+  _startPeriodicRefit() {
+    this.refitIntervalId = setInterval(_ => {
+      this._refit();
+    }, 300);
+  }
+
+  _stopPeriodicRefit() {
+    clearInterval(this.refitIntervalId);
+  }
+
+  close() {
+    this["menuDropdown"].close();
+  }
+
+  async getUserData(uid, counterParam) {
+    let doc = await firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .get();
+    if (doc.exists) {
+      return doc.data();
+    } else {
+      let counter = counterParam || 0;
+      counter++;
+      let promise = new Promise(resolve => {
+        if (counter === 8) {
+          resolve("user creating limit was reached");
+          return;
+        }
+        setTimeout(_ => {
+          resolve(this.getUserData(uid, counter));
+        }, 1000);
+      });
+      let userData = await promise;
+      return userData;
+    }
+  }
+
+  openLogin() {
+    this._toggleDropdown("loginDropdown");
+  }
+
+    _loadFirebaseUIScript() {
     // Code from https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth__ru.js 
     /*! Terms: https://developers.google.com/terms */
 (function(){var h,aa="function"==typeof Object.defineProperties?Object.defineProperty:function(a,b,c){a!=Array.prototype&&a!=Object.prototype&&(a[b]=c.value)},ba="undefined"!=typeof window&&window===this?this:"undefined"!=typeof global&&null!=global?global:this;function ca(a){if(a){for(var b=ba,c=["Promise"],d=0;d<c.length-1;d++){var e=c[d];e in b||(b[e]={});b=b[e]}c=c[c.length-1];d=b[c];a=a(d);a!=d&&null!=a&&aa(b,c,{configurable:!0,writable:!0,value:a})}}
@@ -597,147 +766,6 @@ function(a){if(27==a.keyCode){a.preventDefault();a.stopPropagation();a=new d("ca
 e.Ag;"function"===typeof define&&"amd"in define?define(function(){return e}):"object"===typeof module&&"object"===typeof module.exports?module.exports=e:window.dialogPolyfill=e})();}).call(window);
 // Firebase ready
 this._firebaseUILoaded();
-}
-
-  _getUiConfig() {
-    return {
-      callbacks: {
-        // Called when the user has been successfully signed in.
-        signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-          // Do not redirect.
-          return false;
-        }
-      },
-      signInFlow: "popup",
-      signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-        firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-        firebase.auth.GithubAuthProvider.PROVIDER_ID,
-        {
-          provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-          requireDisplayName: false
-        }
-      ],
-      credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-      tosUrl: "https://01.ht/terms",
-      privacyPolicyUrl: "https://01.ht/privacy"
-    };
-  }
-
-  _firebaseUILoaded() {
-    try {
-    firebase.auth().onAuthStateChanged(
-      async function(user) {
-        this.close();
-        if (!this.authInitialized) store.dispatch(authInitialized());
-        if (user) {
-          // User is signed in.
-          // if (user.emailVerified === false) user.sendEmailVerification();
-          this._closeLoginDropdown();
-          this.loadingUserData = true;
-          let uid = user.uid;
-          let userData = await this.getUserData(uid);
-          if(userData === "limit") {
-            // console.log("_firebaseUILoaded");
-            this._initFirebaseAuthContainer();
-            store.dispatch(signOut());
-            this.loadingUserData = false;
-            this.close();
-            return;
-          };
-          store.dispatch(signIn(userData));
-          this.loadingUserData = false;
-        } else {
-          // No user is signed in.
-          if (this.signedIn) {
-            this._initFirebaseAuthContainer();
-            store.dispatch(signOut());
-          }
-        }
-        // on-auth-state-changed
-        this.dispatchEvent(
-          new CustomEvent("on-auth-state-changed", {
-            bubbles: true,
-            composed: true
-          })
-        );
-      }.bind(this)
-    );
-    // Initialize the FirebaseUI Widget using Firebase.
-    let ui = new firebaseui.auth.AuthUI(firebase.auth());
-    this._initFirebaseAuthContainer();
-    } catch(err) {
-      
-    }
-  }
-
-  _initFirebaseAuthContainer() {
-    const ui = firebaseui.auth.AuthUI.getInstance();
-    ui.reset();
-    ui.start(
-      this.shadowRoot.querySelector("#firebaseui-auth-container"),
-      this._getUiConfig()
-    );
-  }
-
-  _refit() {
-    this.loginDropdown.refit();
-  }
-
-  _toggleDropdown(dropdownId) {
-    if (this[dropdownId].style.display === "") {
-      this[dropdownId].close();
-    } else {
-      this[dropdownId].open();
-    }
-  }
-
-  _closeLoginDropdown() {
-    this.loginDropdown.close();
-  }
-
-  _startPeriodicRefit() {
-    this.refitIntervalId = setInterval(_ => {
-      this._refit();
-    }, 300);
-  }
-
-  _stopPeriodicRefit() {
-    clearInterval(this.refitIntervalId);
-  }
-
-  close() {
-    this["menuDropdown"].close();
-  }
-
-  async getUserData(uid, counterParam) {
-    let doc = await firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .get();
-    if (doc.exists) {
-      return doc.data();
-    } else {
-      let counter = counterParam || 0;
-      counter++;
-      let promise = new Promise(resolve => {
-        if (counter === 8) {
-          resolve("limit");
-          return;
-        }
-        setTimeout(_ => {
-          resolve(this.getUserData(uid, counter));
-        }, 1000);
-      });
-      let userData = await promise;
-      return userData;
-    }
-  }
-
-  openLogin() {
-    this._toggleDropdown("loginDropdown");
   }
 }
 
