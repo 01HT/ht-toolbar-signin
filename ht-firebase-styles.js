@@ -6,6 +6,10 @@ export const HTFirebaseStyles = html`<style>
         box-shadow: none;
     }
 
+    .firebaseui-container {
+        box-shadow:none;
+    }
+
     #firebaseui-auth-container .mdl-button--raised.mdl-button--colored {
         background: var(--accent-color);
     }
@@ -21,12 +25,17 @@ export const HTFirebaseStyles = html`<style>
     #firebaseui-auth-container .firebaseui-textfield.mdl-textfield .firebaseui-label::after {
         background: var(--accent-color);
     }
-    
-    #firebaseui-auth-container .firebaseui-idp-list {
-        margin: 24px 0;
-    }
 
     #firebaseui-auth-container .firebaseui-link {
-        color: var(--accent-color);
+        color: #4285f4;
+    }
+
+    .firebaseui-card-footer {
+        padding: 0 8px;
+    }
+
+    .firebaseui-tos {
+        padding: 0 3px;
+        margin-bottom: 8px;
     }
 </style>`;
