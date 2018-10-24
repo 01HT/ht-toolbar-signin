@@ -216,6 +216,12 @@ class HTToolabarSignin extends LitElement {
             // No user is signed in.
             if (this.signedIn) this._signOut();
           }
+          this.dispatchEvent(
+            new CustomEvent("on-auth-state-changed", {
+              bubbles: true,
+              composed: true
+            })
+          );
         }.bind(this)
       );
     } catch (err) {
@@ -230,13 +236,6 @@ class HTToolabarSignin extends LitElement {
     if (userData === "user creating limit was reached") return;
     this._signIn(userData);
     this.loadingUserData = false;
-    // on-auth-state-changed
-    this.dispatchEvent(
-      new CustomEvent("on-auth-state-changed", {
-        bubbles: true,
-        composed: true
-      })
-    );
   }
 
   async _getUserData(uid, counterParam) {
