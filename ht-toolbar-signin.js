@@ -86,31 +86,30 @@ class HTToolabarSignin extends LitElement {
         </svg>
     </iron-iconset-svg>
 
-    <paper-dialog with-backdrop  @opened-changed=${e => {
+    <paper-dialog id="login-dialog" with-backdrop  @opened-changed=${e => {
       if (!e.target.opened) this._onDialogClose();
     }}>
         <style>
-        paper-dialog-scrollable {
+        #login-dialog paper-dialog-scrollable {
           position:relative;
           padding:0;
           margin:0;
         }
 
-        #close {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            width: 48px;
-            height: 48px;
-            z-index:9;
-            color:var(--secondary-text-color);
+        #login-dialog #close {
+          position: absolute;
+          right: 8px;
+          top: 8px;
+          width: 48px;
+          height: 48px;
+          z-index:9;
+          color:var(--secondary-text-color);
         }
 
-        paper-dialog {
-            margin-left: 0;
-            margin-right: 0;
-            max-width:372px;
-            /* z-index: 99999; */
+        #login-dialog {
+          margin-left: 0;
+          margin-right: 0;
+          max-width:372px;
         }
         </style>
         <paper-dialog-scrollable>
