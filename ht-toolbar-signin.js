@@ -127,11 +127,11 @@ class HTToolabarSignin extends LitElement {
       <div id="buttons" ?hidden=${!authInitialized || loadingUserData}>
         ${
           signedIn
-            ? html`<paper-icon-button src=${
+            ? html`<paper-icon-button src="${
                 window.cloudinaryURL
               }/c_scale,r_max,f_auto,h_64,w_64/v${avatar.version}/${
                 avatar.public_id
-              }.${avatar.format} @click=${_ => {
+              }.${avatar.format}" @click=${_ => {
                 this._toggleMenu();
               }}></paper-icon-button>`
             : html`<paper-button @click=${_ => {
