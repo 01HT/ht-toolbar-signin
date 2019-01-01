@@ -13,6 +13,7 @@
     "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-dialog-scrollable": "^3.0.1",
     "@polymer/paper-icon-button": "^3.0.1",
-    "@polymer/paper-styles": "^3.0.1"
+    "@polymer/paper-styles": "^3.0.1",
+    "@01ht/ht-client-helper-functions": "github:01ht/ht-client-helper-functions"
   }
 }

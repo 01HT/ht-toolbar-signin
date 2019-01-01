@@ -10,6 +10,8 @@ import "@polymer/paper-spinner/paper-spinner.js";
 import "./ht-toolbar-signin-firebaseui-block.js";
 import "./ht-toolbar-signin-email-verify-block.js";
 
+import { callFirebaseHTTPFunction } from "@01ht/ht-client-helper-functions";
+
 class HTToolabarSignin extends LitElement {
   render() {
     const { authInitialized, signedIn, loadingUserData, avatar, mode } = this;
@@ -232,12 +234,29 @@ class HTToolabarSignin extends LitElement {
     let uid = firebase.auth().currentUser.uid;
     this.loadingUserData = true;
     let userData = await this._getUserData(uid);
-    if (userData === "user creating limit was reached") return;
     this._signIn(userData);
     this.loadingUserData = false;
   }
 
-  async _getUserData(uid, counterParam) {
+  async createUser(uid) {
+    let response = await callFirebaseHTTPFunction({
+      name: "httpsUsersCreateUser",
+      authorization: true,
+      options: {
+        method: "GET"
+      }
+    });
+    if (response.created) {
+      let userData = await this._getUserData(uid);
+      return userData;
+    } else {
+      this._signOut();
+      this.loadingUserData = false;
+      throw new Error("Error when create User");
+    }
+  }
+
+  async _getUserData(uid) {
     let doc = await firebase
       .firestore()
       .collection("users")
@@ -246,19 +265,7 @@ class HTToolabarSignin extends LitElement {
     if (doc.exists) {
       return doc.data();
     } else {
-      let counter = counterParam || 0;
-      counter++;
-      let promise = new Promise(resolve => {
-        if (counter === 8) {
-          resolve("user creating limit was reached");
-          return;
-        }
-        setTimeout(_ => {
-          resolve(this._getUserData(uid, counter));
-        }, 1000);
-      });
-      let userData = await promise;
-      return userData;
+      return this.createUser(uid);
     }
   }
 
