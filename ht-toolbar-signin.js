@@ -254,7 +254,7 @@ class HTToolabarSignin extends LitElement {
           return;
         }
         setTimeout(_ => {
-          resolve(this.getUserData(uid, counter));
+          resolve(this._getUserData(uid, counter));
         }, 1000);
       });
       let userData = await promise;
