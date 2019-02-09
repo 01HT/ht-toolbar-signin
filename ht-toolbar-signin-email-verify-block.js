@@ -1,23 +1,11 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 import "@polymer/paper-input/paper-input.js";
 import "@polymer/paper-button";
 import "@polymer/paper-spinner/paper-spinner.js";
 
 class HTToolbarSigninEmailVerifyBlock extends LitElement {
-  render() {
-    let socialLogin = true;
-    if (firebase.auth().currentUser !== null) {
-      let providerData = firebase.auth().currentUser.providerData;
-      if (
-        providerData.length === 1 &&
-        providerData[0].providerId === "password"
-      )
-        socialLogin = false;
-    }
-    const { mode, userData } = this;
-    return html`
-    <style>
+  static styles = css`<style>
     :host {
       display: block;
       position: relative;
@@ -132,71 +120,80 @@ class HTToolbarSigninEmailVerifyBlock extends LitElement {
     [hidden] {
       display:none !important;
     }
-    </style>
+    </style>`;
+
+  render() {
+    let socialLogin = true;
+    if (firebase.auth().currentUser !== null) {
+      let providerData = firebase.auth().currentUser.providerData;
+      if (
+        providerData.length === 1 &&
+        providerData[0].providerId === "password"
+      )
+        socialLogin = false;
+    }
+    const { mode, userData } = this;
+    return html`
     <div id="container">
       <!-- Установка email -->
-      <div id="set" ?hidden=${mode !== "set"}>
+      <div id="set" ?hidden="${mode !== "set"}">
         <div class="title">Ваш email</div>
         <div class="text"></div>
-        <paper-input id="set-input" label="Укажите ваш email адрес" @change=${e => {
+        <paper-input id="set-input" label="Укажите ваш email адрес" @change="${e => {
           e.target.removeAttribute("invalid");
-        }} @keyup=${e => {
+        }}" @keyup="${e => {
       e.target.removeAttribute("invalid");
-    }}></paper-input>
+    }}"></paper-input>
         <div class="actions">
-          <paper-button class="accent" raised @click=${_ => {
+          <paper-button class="accent" raised @click="${_ => {
             this._setEmail();
-          }}>Сохранить</paper-button>
+          }}">Сохранить</paper-button>
         </div>
       </div>
       <!-- Изменение email -->
-      <div id="change" ?hidden=${mode !== "change"}>
+      <div id="change" ?hidden="${mode !== "change"}">
         <div class="title">Изменение email</div>
-        <paper-input id="change-input" label="Новый email" @change=${e => {
+        <paper-input id="change-input" label="Новый email" @change="${e => {
           e.target.removeAttribute("invalid");
-        }} @keyup=${e => {
+        }}" @keyup="${e => {
       e.target.removeAttribute("invalid");
-    }}></paper-input>
-    <paper-input id="password" type="password" label="Ваш текущий пароль" ?hidden=${socialLogin} @change=${e => {
+    }}"></paper-input>
+    <paper-input id="password" type="password" label="Ваш текущий пароль" ?hidden="${socialLogin}" @change="${e => {
       e.target.removeAttribute("invalid");
-    }} @keyup=${e => {
+    }}" @keyup="${e => {
       e.target.removeAttribute("invalid");
-    }}></paper-input>
+    }}"></paper-input>
         <div class="actions">
-          <paper-button @click=${_ => {
+          <paper-button @click="${_ => {
             this.verifyEmail(true);
-          }}>Назад</paper-button>
-          <paper-button class="accent" raised @click=${_ => {
-            this._changeEmail();
-          }}>Сохранить</paper-button>
+          }}">Назад</paper-button>
+          <paper-button class="accent" raised @click="${
+            this._changeEmail
+          }">Сохранить</paper-button>
         </div>
       </div>
       <!-- Проверка -->
-      <div id="verify" ?hidden=${mode !== "verify"}>
+      <div id="verify" ?hidden="${mode !== "verify"}">
         <div class="title">Подтверждение email</div>
         <div id="edit">
           <div class="email">Ваш email: <strong>${
             userData.email === null ? "Не указан" : `${userData.email}`
           }</strong></div>
           <div class="actions">
-            <paper-button class="accent" raised @click=${_ => {
-              this.changeEmail();
-            }}>Изменить</paper-button>
+            <paper-button class="accent" raised @click="${
+              this.changeEmail
+            }">Изменить</paper-button>
           </div>
         </div>
-        <div id="wait" ?hidden=${userData.email === null}>
+        <div id="wait" ?hidden="${userData.email === null}">
           Вам отправлено письмо с подтверждением
           <paper-spinner active></paper-spinner>
           <div class="sub">Ожидание подтверждения</div>
-          <paper-button class="accent" raised @click=${_ => {
-            this._sendEmailVerification();
-          }}>Отправить еще раз</paper-button>
+          <paper-button class="accent" raised @click="${
+            this._sendEmailVerification
+          }">Отправить еще раз</paper-button>
       </div>
     </div>`;
-  }
-
-  static get is() {
-    return "ht-toolbar-signin-email-verify-block";
   }
 
   static get properties() {
@@ -463,6 +460,6 @@ class HTToolbarSigninEmailVerifyBlock extends LitElement {
 }
 
 customElements.define(
-  HTToolbarSigninEmailVerifyBlock.is,
+  "ht-toolbar-signin-email-verify-block",
   HTToolbarSigninEmailVerifyBlock
 );

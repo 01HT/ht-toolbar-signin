@@ -1,6 +1,6 @@
-import { html } from "@polymer/lit-element";
+import { css } from "lit-element";
 
-export const HTFirebaseStyles = html`<style>
+export const HTFirebaseStyles = css`<style>
     #firebaseui-auth-container {
         overflow: visible;
         box-shadow: none;

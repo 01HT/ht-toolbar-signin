@@ -1,6 +1,6 @@
-import { html } from "@polymer/lit-element";
+import { css } from "lit-element";
 
-export const firebaseStyles = html`<style>/*! Terms: https://developers.google.com/terms */ @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700);dialog
+export const firebaseStyles = css`<style>/*! Terms: https://developers.google.com/terms */ @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700);dialog
 { position: absolute; left: 0; right: 0; width: -moz-fit-content; width: -webkit-fit-content; width: fit-content; height:
 -moz-fit-content; height: -webkit-fit-content; height: fit-content; margin: auto; border: solid; padding: 1em; background:
 white; color: black; display: none; } dialog[open] { display: block; } dialog + .backdrop { position: fixed; top: 0; right:

@@ -1,27 +1,26 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 import { firebaseStyles } from "./firebase-styles.js";
 import { HTFirebaseStyles } from "./ht-firebase-styles.js";
 
 class HTToolbarSigninFirebaseuiBlock extends LitElement {
-    render() {
-    return html`
-    <style>
+    static styles = [
+    firebaseStyles,
+    HTFirebaseStyles,
+    css`<style>
     :host {
         display: block;
         position: relative;
         box-sizing: border-box;
     }
-    </style>
+    </style>`
+  ];
+
+    render() {
+    return html`
     <div id="container">
-        ${firebaseStyles}
-        ${HTFirebaseStyles}
         <div id="firebaseui-auth-container"></div>
     </div>`;
-    }
-
-    static get is() {
-        return "ht-toolbar-signin-firebaseui-block";
     }
 
     firstUpdated() {
@@ -520,6 +519,6 @@ e.Ag;"function"===typeof define&&"amd"in define?define(function(){return e}):"ob
 }
 
 customElements.define(
-    HTToolbarSigninFirebaseuiBlock.is,
+    "ht-toolbar-signin-firebaseui-block",
     HTToolbarSigninFirebaseuiBlock
 );

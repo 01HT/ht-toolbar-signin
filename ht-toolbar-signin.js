@@ -1,5 +1,5 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 import "@polymer/paper-icon-button";
 import "@polymer/paper-button";
 import "@polymer/paper-dialog/paper-dialog.js";
@@ -13,10 +13,7 @@ import "./ht-toolbar-signin-email-verify-block.js";
 import { callFirebaseHTTPFunction } from "@01ht/ht-client-helper-functions";
 
 class HTToolabarSignin extends LitElement {
-  render() {
-    const { authInitialized, signedIn, loadingUserData, avatar, mode } = this;
-    return html`
-      <style>
+  static styles = css`<style>
         :host {
           display: block;
           position: relative;
@@ -79,7 +76,11 @@ class HTToolabarSignin extends LitElement {
         [hidden], #buttons[hidden] {
           display:none;
         }
-      </style>
+      </style>`;
+
+  render() {
+    const { authInitialized, signedIn, loadingUserData, avatar, mode } = this;
+    return html`
       <iron-iconset-svg size="24" name="ht-toolbar-signin">
         <svg>
             <defs>
@@ -88,9 +89,9 @@ class HTToolabarSignin extends LitElement {
         </svg>
     </iron-iconset-svg>
 
-    <paper-dialog id="login-dialog" with-backdrop  @opened-changed=${e => {
+    <paper-dialog id="login-dialog" with-backdrop  @opened-changed="${e => {
       if (!e.target.opened) this._onDialogClose();
-    }}>
+    }}">
         <style>
         #login-dialog paper-dialog-scrollable {
           position:relative;
@@ -116,44 +117,40 @@ class HTToolabarSignin extends LitElement {
         </style>
         <paper-dialog-scrollable>
             <paper-icon-button id="close" icon="ht-toolbar-signin:close" dialog-dismiss></paper-icon-button>
-            <ht-toolbar-signin-firebaseui-block ?hidden=${mode ===
-              "email"}></ht-toolbar-signin-firebaseui-block>
-            <ht-toolbar-signin-email-verify-block ?hidden=${mode ===
-              "firebaseui"}></ht-toolbar-signin-email-verify-block>
+            <ht-toolbar-signin-firebaseui-block ?hidden="${mode ===
+              "email"}"></ht-toolbar-signin-firebaseui-block>
+            <ht-toolbar-signin-email-verify-block ?hidden="${mode ===
+              "firebaseui"}"></ht-toolbar-signin-email-verify-block>
         </paper-dialog-scrollable>
     </paper-dialog>
 
     <div id="container">
-      <paper-spinner active ?hidden=${!authInitialized ||
-        !loadingUserData}></paper-spinner>
-      <div id="buttons" ?hidden=${!authInitialized || loadingUserData}>
+      <paper-spinner active ?hidden="${!authInitialized ||
+        !loadingUserData}"></paper-spinner>
+      <div id="buttons" ?hidden="${!authInitialized || loadingUserData}">
         ${
           signedIn
             ? html`<paper-icon-button src="${
                 window.cloudinaryURL
               }/c_scale,r_max,f_auto,h_64,w_64/v${avatar.version}/${
                 avatar.public_id
-              }.${avatar.format}" @click=${_ => {
+              }.${avatar.format}" @click="${_ => {
                 this._toggleMenu();
-              }}></paper-icon-button>`
-            : html`<paper-button @click=${_ => {
+              }}"></paper-icon-button>`
+            : html`<paper-button @click="${_ => {
                 this.dialog.open();
-              }}>Войти</paper-button>`
+              }}">Войти</paper-button>`
         }
       </div>
       <iron-dropdown horizontal-align="right" vertical-align="top" vertical-offset="36">
         <div slot="dropdown-content">
-            <div ?hidden=${!signedIn}>
+            <div ?hidden="${!signedIn}">
               <slot></slot>
             </div>
         </div>
       </iron-dropdown>
     </div>
 `;
-  }
-
-  static get is() {
-    return "ht-toolbar-signin";
   }
 
   static get properties() {
@@ -340,4 +337,4 @@ class HTToolabarSignin extends LitElement {
   }
 }
 
-customElements.define(HTToolabarSignin.is, HTToolabarSignin);
+customElements.define("ht-toolbar-signin", HTToolabarSignin);
