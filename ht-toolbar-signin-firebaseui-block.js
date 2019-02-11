@@ -4,17 +4,17 @@ import { firebaseStyles } from "./firebase-styles.js";
 import { HTFirebaseStyles } from "./ht-firebase-styles.js";
 
 class HTToolbarSigninFirebaseuiBlock extends LitElement {
-    static styles = [
+    static get styles() { return [
     firebaseStyles,
     HTFirebaseStyles,
-    css`<style>
+    css`
     :host {
         display: block;
         position: relative;
         box-sizing: border-box;
     }
-    </style>`
-  ];
+    `
+  ];}
 
     render() {
     return html`

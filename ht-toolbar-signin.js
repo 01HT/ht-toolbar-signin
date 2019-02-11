@@ -12,71 +12,72 @@ import "./ht-toolbar-signin-email-verify-block.js";
 
 import { callFirebaseHTTPFunction } from "@01ht/ht-client-helper-functions";
 
+import { stylesBasicWebcomponents } from "@01ht/ht-theme/styles";
+
 class HTToolabarSignin extends LitElement {
-  static styles = css`<style>
-        :host {
-          display: block;
-          position: relative;
-          box-sizing: border-box;
-        }
-        
+  static get styles() {
+    return [
+      stylesBasicWebcomponents,
+      css`
         #container {
-          display:flex;
-          align-items:center;
+          display: flex;
+          align-items: center;
         }
-        
+
         paper-icon-button {
           color: var(--secondary-text-color);
           width: 32px;
           height: 32px;
           border-radius: 50%;
           overflow: hidden;
-          padding:0;
-          margin-left:4px;
+          padding: 0;
+          margin-left: 4px;
         }
 
         paper-button {
           color: var(--accent-color);
-          height:36px;
+          height: 36px;
           padding: 8px;
-          font-size:14px;
-          font-weight:500;
-          transition: background-color .2s,color .2s;
-          margin:0;
+          font-size: 14px;
+          font-weight: 500;
+          transition: background-color 0.2s, color 0.2s;
+          margin: 0;
         }
 
         paper-spinner {
-          align-items:center;
+          align-items: center;
         }
 
         paper-button:hover {
-          background:#f0f0f0;
-          transition: background-color .2s,color .2s;
+          background: #f0f0f0;
+          transition: background-color 0.2s, color 0.2s;
         }
 
         #buttons {
-          display:flex;
-          align-items:center;
+          display: flex;
+          align-items: center;
         }
 
         iron-dropdown {
-          width:270px;
-          height:auto;
+          width: 270px;
+          height: auto;
           overflow: hidden;
           background: #fff;
           box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-          0 1px 10px 0 rgba(0, 0, 0, 0.12),
-          0 2px 4px -1px rgba(0, 0, 0, 0.4);
+            0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
         }
 
         iron-dropdown > div {
           overflow: hidden;
         }
 
-        [hidden], #buttons[hidden] {
-          display:none;
+        [hidden],
+        #buttons[hidden] {
+          display: none;
         }
-      </style>`;
+      `
+    ];
+  }
 
   render() {
     const { authInitialized, signedIn, loadingUserData, avatar, mode } = this;

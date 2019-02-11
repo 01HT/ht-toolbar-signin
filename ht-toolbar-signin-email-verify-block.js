@@ -5,122 +5,126 @@ import "@polymer/paper-button";
 import "@polymer/paper-spinner/paper-spinner.js";
 
 class HTToolbarSigninEmailVerifyBlock extends LitElement {
-  static styles = css`<style>
-    :host {
-      display: block;
-      position: relative;
-      box-sizing: border-box;
-      font-size: 16px;
-    }
+  static get styles() {
+    return css`
+      :host {
+        display: block;
+        position: relative;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
 
-    paper-button {
-      border: none;
-      border-radius: 2px;
-      color: var(--accent-color);
-      background: transparent;
-      position: relative;
-      height: 36px;
-      margin: 0;
-      min-width: 64px;
-      padding: 0 16px;
-      display: inline-block;
-      font-size: 14px;
-      font-weight: 500;
-      text-transform: uppercase;
-      line-height: 1;
-      letter-spacing: 0;
-      overflow: hidden;
-      will-change: box-shadow;
-      transition: box-shadow .2s cubic-bezier(0.4, 0, 1, 1),background-color .2s cubic-bezier(0.4, 0, 0.2, 1),color .2s cubic-bezier(0.4, 0, 0.2, 1);
-      outline: none;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      line-height: 36px;
-      vertical-align: middle;
-      margin-left: 8px;
-    }
+      paper-button {
+        border: none;
+        border-radius: 2px;
+        color: var(--accent-color);
+        background: transparent;
+        position: relative;
+        height: 36px;
+        margin: 0;
+        min-width: 64px;
+        padding: 0 16px;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: uppercase;
+        line-height: 1;
+        letter-spacing: 0;
+        overflow: hidden;
+        will-change: box-shadow;
+        transition: box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1),
+          background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+          color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: none;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        line-height: 36px;
+        vertical-align: middle;
+        margin-left: 8px;
+      }
 
-    paper-button:hover {
-      background-color: rgba(158,158,158, 0.20);
-    }
+      paper-button:hover {
+        background-color: rgba(158, 158, 158, 0.2);
+      }
 
-    paper-button.accent {
-      color: #fff;
-      background: var(--accent-color);
-    }
+      paper-button.accent {
+        color: #fff;
+        background: var(--accent-color);
+      }
 
-    paper-button.accent:hover {
-      background: var(--accent-color);
-    }
+      paper-button.accent:hover {
+        background: var(--accent-color);
+      }
 
-    paper-spinner {
-      width: 48px;
-      height: 48px;
-      margin: 16px 0 8px 0;
-    }
+      paper-spinner {
+        width: 48px;
+        height: 48px;
+        margin: 16px 0 8px 0;
+      }
 
-    paper-input {
-      padding: 0;
-    }
+      paper-input {
+        padding: 0;
+      }
 
-    #container {
-      display:block;
-      position:relative;
-      min-width: 260px;
-      overflow:hidden;
-      padding:24px 24px 16px 24px;
-    }
+      #container {
+        display: block;
+        position: relative;
+        min-width: 260px;
+        overflow: hidden;
+        padding: 24px 24px 16px 24px;
+      }
 
-    #verify {
-      display:flex;
-      flex-direction:column;
-    }
-    
-    #wait {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      padding-top: 24px;
-      border-top: 1px solid #dddd;
-      text-align: center;
-      margin-top: 24px;
-    }
+      #verify {
+        display: flex;
+        flex-direction: column;
+      }
 
-    .title {
-      color: rgba(0,0,0,0.87);
-      direction: ltr;
-      font-size: 20px;
-      font-weight: 500;
-      line-height: 24px;
-      margin: 0;
-      padding: 0;
-      text-align: left;
-      padding-bottom: 20px;
-    }
-    
-    .email {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
+      #wait {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding-top: 24px;
+        border-top: 1px solid #dddd;
+        text-align: center;
+        margin-top: 24px;
+      }
 
-    .sub {
-      color: var(--secondary-text-color);
-      margin-bottom:16px;
-    }
+      .title {
+        color: rgba(0, 0, 0, 0.87);
+        direction: ltr;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 24px;
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        padding-bottom: 20px;
+      }
 
-    .actions {
-      display:flex;
-      justify-content:flex-end;
-      margin-top:16px;
-    }
+      .email {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
 
-    [hidden] {
-      display:none !important;
-    }
-    </style>`;
+      .sub {
+        color: var(--secondary-text-color);
+        margin-bottom: 16px;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 16px;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+    `;
+  }
 
   render() {
     let socialLogin = true;
