@@ -2,7 +2,6 @@ import { css } from "lit-element";
 
 export const firebaseStyles = css`
   /*! Terms: https://developers.google.com/terms */
-  @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700);
   dialog {
     position: absolute;
     left: 0;
