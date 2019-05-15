@@ -231,14 +231,19 @@ class HTToolbarSigninEmailVerifyBlock extends LitElement {
   }
 
   async _updateEmailVerifiedInFirestore(uid) {
-    await firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .update({
-        emailVerified: true,
-        email: firebase.auth().currentUser.email
-      });
+    try {
+      // Need update if user change email from account settings
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .update({
+          emailVerified: true,
+          email: firebase.auth().currentUser.email
+        });
+    } catch (e) {
+      // Access premission error when new user account creating, no need update email
+    }
   }
 
   reset() {
