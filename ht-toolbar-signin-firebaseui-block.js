@@ -2,6 +2,7 @@
 import { LitElement, html, css } from "lit-element";
 import { firebaseStyles } from "./firebase-styles.js";
 import { HTFirebaseStyles } from "./ht-firebase-styles.js";
+import "@polymer/paper-spinner/paper-spinner.js";
 
 class HTToolbarSigninFirebaseuiBlock extends LitElement {
     static get styles() { return [
@@ -12,6 +13,35 @@ class HTToolbarSigninFirebaseuiBlock extends LitElement {
         display: block;
         position: relative;
         box-sizing: border-box;
+        min-width: 355.688px;
+        min-height: 253px;
+    }
+
+    paper-spinner {
+        width: 64px;
+        height: 64px;
+    }
+
+    #spinner-container {
+        position:absolute;
+        top:0;
+        right:0;
+        bottom:0;
+        left:0;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-direction: column;
+    }
+
+    #spinner-title {
+        margin-top: 16px;
+        font-size: 16px;
+        color: var(--secondary-text-color);
+    }
+
+    #firebaseui-auth-container {
+        background: #fff;
     }
     `
   ];}
@@ -19,6 +49,10 @@ class HTToolbarSigninFirebaseuiBlock extends LitElement {
     render() {
     return html`
     <div id="container">
+        <div id="spinner-container">
+            <paper-spinner active></paper-spinner>
+            <div id="spinner-title">Загрузка</div>
+        </div>
         <div id="firebaseui-auth-container"></div>
     </div>`;
     }

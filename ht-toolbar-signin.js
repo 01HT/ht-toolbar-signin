@@ -10,7 +10,10 @@ import "@polymer/paper-spinner/paper-spinner.js";
 import "./ht-toolbar-signin-firebaseui-block.js";
 import "./ht-toolbar-signin-email-verify-block.js";
 
-import { callFirebaseHTTPFunction } from "@01ht/ht-client-helper-functions";
+import {
+  callFirebaseHTTPFunction
+  // callTestHTTPFunction
+} from "@01ht/ht-client-helper-functions";
 
 import { stylesBasicWebcomponents } from "@01ht/ht-theme/styles";
 
@@ -90,7 +93,7 @@ class HTToolabarSignin extends LitElement {
         </svg>
     </iron-iconset-svg>
 
-    <paper-dialog id="login-dialog" with-backdrop  @opened-changed="${e => {
+    <paper-dialog id="login-dialog" with-backdrop @opened-changed="${e => {
       if (!e.target.opened) this._onDialogClose();
     }}">
         <style>
@@ -115,9 +118,17 @@ class HTToolabarSignin extends LitElement {
           margin-right: 0;
           max-width:372px;
         }
+
+        #login-dialog paper-dialog-scrollable #spinner-container {
+          width: 100%;
+          height: 100%;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+        }
         </style>
         <paper-dialog-scrollable>
-            <paper-icon-button id="close" icon="ht-toolbar-signin:close" dialog-dismiss></paper-icon-button>
+            <paper-icon-button id="close" icon="ht-toolbar-signin:close" dialog-dismiss ?hidden="${signedIn}"></paper-icon-button>
             <ht-toolbar-signin-firebaseui-block ?hidden="${mode ===
               "email"}"></ht-toolbar-signin-firebaseui-block>
             <ht-toolbar-signin-email-verify-block ?hidden="${mode ===
@@ -208,8 +219,8 @@ class HTToolabarSignin extends LitElement {
               }
               this.dialog.open();
             } else {
-              await this.authorizeUser();
               this.dialog.close();
+              await this.authorizeUser();
             }
           } else {
             // No user is signed in.
@@ -239,6 +250,10 @@ class HTToolabarSignin extends LitElement {
   async createUser(uid) {
     let response = await callFirebaseHTTPFunction({
       name: "httpsUsersCreateUser",
+      projectId:
+        window.projectEnv === "prod"
+          ? "myaccount-01-ht"
+          : "myaccount-01-ht-dev",
       authorization: true,
       options: {
         method: "GET"

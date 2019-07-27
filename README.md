@@ -18,3 +18,5 @@ Create steps
 3. Replace .call(this) on .call(window)
 
 4. Get css styles from url https://www.gstatic.com/firebasejs/ui/3.4.1/firebase-ui-auth.css
+
+5. In ht-toolbar-signin-email-verify-block.js add all element app names `myaccount-app, elements-app, armarker-app`

@@ -401,16 +401,18 @@ class HTToolbarSigninEmailVerifyBlock extends LitElement {
 
   async _sendEmailVerification() {
     await firebase.auth().currentUser.sendEmailVerification();
-    document.body.querySelector("elements-app").dispatchEvent(
-      new CustomEvent("show-toast", {
-        bubbles: true,
-        composed: true,
-        detail: {
-          duration: 4000,
-          text: "На ваш email отправлено письмо с подтверждением"
-        }
-      })
-    );
+    document
+      .querySelectorAll("myaccount-app, elements-app, armarker-app")[0]
+      .dispatchEvent(
+        new CustomEvent("show-toast", {
+          bubbles: true,
+          composed: true,
+          detail: {
+            duration: 4000,
+            text: "На ваш email отправлено письмо с подтверждением"
+          }
+        })
+      );
   }
 
   async _reauthenticate(currentPassword) {
