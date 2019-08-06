@@ -143,7 +143,7 @@ class HTToolabarSignin extends LitElement {
         ${
           signedIn
             ? html`<paper-icon-button src="${
-                window.cloudinaryURL
+                window.appConfig.cloudinary.url
               }/c_scale,r_max,f_auto,h_64,w_64/v${avatar.version}/${
                 avatar.public_id
               }.${avatar.format}" @click="${_ => {
