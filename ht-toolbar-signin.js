@@ -251,7 +251,7 @@ class HTToolabarSignin extends LitElement {
     let response = await callFirebaseHTTPFunction({
       name: "httpsUsersCreateUser",
       projectId:
-        window.projectEnv === "prod"
+        window.appConfig.projectEnv === "prod"
           ? "myaccount-01-ht"
           : "myaccount-01-ht-dev",
       authorization: true,
